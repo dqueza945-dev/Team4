@@ -6,21 +6,279 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1571</width>
+    <height>632</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="HomePage">
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>50</y>
+          <width>401</width>
+          <height>391</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="HomeTitleLabel">
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>22</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>StudyStack</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="WelcomeLabel">
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Welcome to StudyStack</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="OpenAddTaskButton">
+           <property name="text">
+            <string>Add Task</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ViewTaskButton">
+           <property name="text">
+            <string>View Tasks</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="UpcomingTasksLabel">
+           <property name="text">
+            <string>Upcoming Tasks</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="HomeTaskTableWidget">
+           <property name="columnCount">
+            <number>8</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Task Name </string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Class</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Due Date</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Hours</string>
+            </property>
+           </column>
+           <column/>
+           <column/>
+           <column/>
+           <column/>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="StatusTitleLabel">
+           <property name="text">
+            <string>Today's Summary</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="TasksDueTodayLabel">
+             <property name="text">
+              <string>Tasks Due Today: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="HoursPlannedLabel">
+             <property name="text">
+              <string>Hours Planned: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="OverDueTasksLabel">
+             <property name="text">
+              <string>OverDue Tasks:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="AddTaskPage">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="AddTaskTitleLabel">
+          <property name="font">
+           <font>
+            <pointsize>36</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Add New Task!</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QFormLayout" name="formLayout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Task Name:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="TaskNameLineEdit">
+              <property name="placeholderText">
+               <string>Enter Task Name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Class:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="ClassComboBox">
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Due Date:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDateTimeEdit" name="dateTimeEdit">
+              <property name="displayFormat">
+               <string>MM/dd/yyyy h:mm AP</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Grade Weight:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDoubleSpinBox" name="GradeWeightSpinBox">
+              <property name="suffix">
+               <string>%</string>
+              </property>
+              <property name="maximum">
+               <double>100.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Estimated Hours:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QDoubleSpinBox" name="EstimatedHoursSpinBox">
+              <property name="suffix">
+               <string> hours</string>
+              </property>
+              <property name="maximum">
+               <double>1000.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QPushButton" name="BackToHomeScreen">
+            <property name="text">
+             <string>Home Page</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="AddTaskButton">
+            <property name="text">
+             <string>Save Task</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>33</height>
+     <width>1571</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
