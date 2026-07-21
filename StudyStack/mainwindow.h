@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSqlDatabase>
 #include <QString>
 
 QT_BEGIN_NAMESPACE
@@ -32,12 +31,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
-    // Connection to the SQLite database.
-    QSqlDatabase database;
-
-    // Opens the database and creates the tasks table.
-    bool initializeDatabase();
 
     // Loads all saved tasks into the table.
     void loadTasks();

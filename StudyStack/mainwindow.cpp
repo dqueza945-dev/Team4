@@ -64,79 +64,20 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::addTask
         );
 
-    // Open the database and load saved tasks.
-    if (initializeDatabase())
-    {
+    // database is already open in main.cpp
         loadTasks();
-    }
 }
 
 MainWindow::~MainWindow()
 {
-    if (database.isOpen())
-    {
-        database.close();
-    }
 
     delete ui;
 }
 
-bool MainWindow::initializeDatabase()
-{
-    database = QSqlDatabase::addDatabase("QSQLITE");
-
-    QString databasePath =
-        QCoreApplication::applicationDirPath()
-        + "/studystack.db";
-
-    database.setDatabaseName(databasePath);
-
-    if (!database.open())
-    {
-        QMessageBox::critical(
-            this,
-            "Database Error",
-            "The database could not be opened.\n\n"
-                + database.lastError().text()
-            );
-
-        return false;
-    }
-
-    QSqlQuery query(database);
-
-    QString createTableCommand =
-        "CREATE TABLE IF NOT EXISTS tasks ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "name TEXT NOT NULL, "
-        "class_name TEXT NOT NULL, "
-        "due_date TEXT NOT NULL, "
-        "grade_weight REAL NOT NULL, "
-        "estimated_hours REAL NOT NULL"
-        ")";
-
-    if (!query.exec(createTableCommand))
-    {
-        QMessageBox::critical(
-            this,
-            "Database Error",
-            "The tasks table could not be created.\n\n"
-                + query.lastError().text()
-            );
-
-        return false;
-    }
-
-    return true;
-}
-
 void MainWindow::showHomePage()
 {
-    if (database.isOpen())
-    {
-        loadTasks();
-    }
 
+    loadTasks();
     ui->stackedWidget->setCurrentWidget(ui->HomePage);
 }
 
@@ -146,6 +87,7 @@ void MainWindow::showAddTaskPage()
 
     ui->TaskNameLineEdit->setFocus();
 }
+
 
 void MainWindow::addTask()
 {
@@ -227,17 +169,18 @@ void MainWindow::addTask()
     QString storedDueDate =
         dueDateTime.toString(Qt::ISODate);
 
-    QSqlQuery query(database);
+    QSqlQuery query;
 
     query.prepare(
         "INSERT INTO tasks "
-        "(name, class_name, due_date, "
+        "(user_id, name, class_name, due_date, "
         "grade_weight, estimated_hours) "
         "VALUES "
-        "(:name, :class_name, :due_date, "
+        "(:user_id, :name, :class_name, :due_date, "
         ":grade_weight, :estimated_hours)"
         );
 
+    query.bindValue(":user_id", 1);  // TODO: replace with real logged-in user once login exists
     query.bindValue(":name", taskName);
     query.bindValue(":class_name", className);
     query.bindValue(":due_date", storedDueDate);
@@ -288,7 +231,7 @@ void MainWindow::loadTasks()
 {
     ui->HomeTaskTableWidget->setRowCount(0);
 
-    QSqlQuery query(database);
+    QSqlQuery query;
 
     if (!query.exec(
             "SELECT name, class_name, due_date, "
