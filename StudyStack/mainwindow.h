@@ -28,6 +28,10 @@ private slots:
 
     // Changes the stacked widget to the Add Task page.
     void showAddTaskPage();
+    // delets selected task from database
+    void deleteTask();
+    // edits selected task
+    void editTask();
 
 private:
     Ui::MainWindow *ui;
