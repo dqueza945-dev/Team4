@@ -4,6 +4,5 @@ A smart academic planner. you enter your classes and assignments, and it builds 
 ## How to build StudyStack
 1. Install Qt (Qt Edu for Developers, or qt.io open source) pick "Qt for desktop development"
 2. Clone this repo: git clone https://github.com/dqueza945-dev/Team4.git
-3. Open Qt Creator → File → Open Project → select Team4/StudyStack/CMakeLists.txt
-4. Click the green Run button — a blank window should appear
-5. Mac note: if the Qt installer warns about Xcode, you can continue past it
+3. Open Qt Creator. File. Open Project. select Team4/StudyStack/CMakeLists.txt
+4. Click the green Run button. 
