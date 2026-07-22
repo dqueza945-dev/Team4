@@ -21,13 +21,13 @@
        <number>0</number>
       </property>
       <widget class="QWidget" name="HomePage">
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
-          <x>490</x>
-          <y>50</y>
-          <width>401</width>
-          <height>391</height>
+          <x>390</x>
+          <y>30</y>
+          <width>581</width>
+          <height>411</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -75,6 +75,20 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="EditTaskButton">
+           <property name="text">
+            <string>Edit Task</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="DeleteTaskButton">
+           <property name="text">
+            <string>Delete Task</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="UpcomingTasksLabel">
            <property name="text">
             <string>Upcoming Tasks</string>
@@ -84,7 +98,7 @@
          <item>
           <widget class="QTableWidget" name="HomeTaskTableWidget">
            <property name="columnCount">
-            <number>8</number>
+            <number>4</number>
            </property>
            <column>
             <property name="text">
@@ -106,10 +120,6 @@
              <string>Hours</string>
             </property>
            </column>
-           <column/>
-           <column/>
-           <column/>
-           <column/>
           </widget>
          </item>
          <item>
@@ -278,7 +288,7 @@
      <x>0</x>
      <y>0</y>
      <width>1571</width>
-     <height>21</height>
+     <height>33</height>
     </rect>
    </property>
   </widget>

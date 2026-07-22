@@ -64,19 +64,33 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::addTask
         );
 
+    // Delete the selected task when Delete Task is clicked.
+    connect(
+        ui->DeleteTaskButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::deleteTask
+        );
+
+    // Edit the selected task when Edit Task is clicked.
+    connect(
+        ui->EditTaskButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::editTask
+        );
+
     // database is already open in main.cpp
-        loadTasks();
+    loadTasks();
 }
 
 MainWindow::~MainWindow()
 {
-
     delete ui;
 }
 
 void MainWindow::showHomePage()
 {
-
     loadTasks();
     ui->stackedWidget->setCurrentWidget(ui->HomePage);
 }
@@ -87,7 +101,6 @@ void MainWindow::showAddTaskPage()
 
     ui->TaskNameLineEdit->setFocus();
 }
-
 
 void MainWindow::addTask()
 {
@@ -227,6 +240,48 @@ void MainWindow::addTask()
     showHomePage();
 }
 
+void MainWindow::deleteTask()
+{
+    int row = ui->HomeTaskTableWidget->currentRow();
+
+    if (row < 0)
+    {
+        QMessageBox::warning(
+            this,
+            "No Task Selected",
+            "Please select a task to delete."
+            );
+        return;
+    }
+
+    QString taskName = ui->HomeTaskTableWidget->item(row, 0)->text();
+
+    QSqlQuery query;
+    query.prepare("DELETE FROM tasks WHERE name = :name");
+    query.bindValue(":name", taskName);
+
+    if (!query.exec())
+    {
+        QMessageBox::critical(
+            this,
+            "Delete Error",
+            "The task could not be deleted.\n\n" + query.lastError().text()
+            );
+        return;
+    }
+
+    ui->HomeTaskTableWidget->removeRow(row);
+}
+
+void MainWindow::editTask()
+{
+    QMessageBox::information(
+        this,
+        "Coming Soon",
+        "Edit Task is not implemented yet."
+        );
+}
+
 void MainWindow::loadTasks()
 {
     ui->HomeTaskTableWidget->setRowCount(0);
@@ -321,18 +376,6 @@ void MainWindow::addTaskToTable(
     ui->HomeTaskTableWidget->setItem(
         row,
         3,
-        new QTableWidgetItem(
-            QString::number(
-                gradeWeight,
-                'f',
-                2
-                ) + "%"
-            )
-        );
-
-    ui->HomeTaskTableWidget->setItem(
-        row,
-        4,
         new QTableWidgetItem(
             QString::number(
                 estimatedHours,
