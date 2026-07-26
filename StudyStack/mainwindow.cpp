@@ -98,6 +98,8 @@ void MainWindow::showHomePage()
 void MainWindow::showAddTaskPage()
 {
     ui->stackedWidget->setCurrentWidget(ui->AddTaskPage);
+    ui->AddTaskTitleLabel->setText("Add New Task!");
+
 
     ui->TaskNameLineEdit->setFocus();
 }
@@ -184,16 +186,31 @@ void MainWindow::addTask()
 
     QSqlQuery query;
 
-    query.prepare(
-        "INSERT INTO tasks "
-        "(user_id, name, class_name, due_date, "
-        "grade_weight, estimated_hours) "
-        "VALUES "
-        "(:user_id, :name, :class_name, :due_date, "
-        ":grade_weight, :estimated_hours)"
-        );
+    if (isEditingTask)
+    {
+        // Update the existing task instead of creating a new one.
+        query.prepare(
+            "UPDATE tasks SET "
+            "name = :name, class_name = :class_name, due_date = :due_date, "
+            "grade_weight = :grade_weight, estimated_hours = :estimated_hours "
+            "WHERE name = :original_name"
+            );
+        query.bindValue(":original_name", editingTaskOriginalName);
+    }
+    else
+    {
+        // Insert a brand new task.
+        query.prepare(
+            "INSERT INTO tasks "
+            "(user_id, name, class_name, due_date, "
+            "grade_weight, estimated_hours) "
+            "VALUES "
+            "(:user_id, :name, :class_name, :due_date, "
+            ":grade_weight, :estimated_hours)"
+            );
+        query.bindValue(":user_id", 1);  // TODO: replace with real logged-in user once login exists
+    }
 
-    query.bindValue(":user_id", 1);  // TODO: replace with real logged-in user once login exists
     query.bindValue(":name", taskName);
     query.bindValue(":class_name", className);
     query.bindValue(":due_date", storedDueDate);
@@ -212,13 +229,27 @@ void MainWindow::addTask()
         return;
     }
 
-    addTaskToTable(
-        taskName,
-        className,
-        storedDueDate,
-        gradeWeight,
-        estimatedHours
-        );
+    bool wasEditing = isEditingTask;
+
+    // Reset editing state now that the save succeeded.
+    isEditingTask = false;
+    editingTaskOriginalName.clear();
+
+    if (wasEditing)
+    {
+        // Refresh the whole table so the updated values show correctly.
+        loadTasks();
+    }
+    else
+    {
+        addTaskToTable(
+            taskName,
+            className,
+            storedDueDate,
+            gradeWeight,
+            estimatedHours
+            );
+    }
 
     // Clear the form after saving.
     ui->TaskNameLineEdit->clear();
@@ -275,11 +306,34 @@ void MainWindow::deleteTask()
 
 void MainWindow::editTask()
 {
-    QMessageBox::information(
-        this,
-        "Coming Soon",
-        "Edit Task is not implemented yet."
+
+    int row = ui->HomeTaskTableWidget->currentRow();
+
+    if  (row < 0) {
+        QMessageBox::warning(
+            this,
+            "No task Selected",
+            "Please select a task to edit."
+            );
+        return;
+    }
+
+    // remember the task we are editing
+    isEditingTask = true;
+    editingTaskOriginalName = ui->HomeTaskTableWidget->item(row, 0)->text();
+
+    // pre fill the add task form with this taasks current values
+    ui->TaskNameLineEdit->setText(
+        ui->HomeTaskTableWidget->item(row, 0)->text()
         );
+    ui->ClassComboBox->setCurrentText(
+        ui->HomeTaskTableWidget->item(row, 1)->text()
+        );
+
+    // switch to the add task page to let the user make changes
+    ui->stackedWidget->setCurrentWidget(ui->AddTaskPage);
+    ui->AddTaskTitleLabel->setText("Edit Task");
+
 }
 
 void MainWindow::loadTasks()

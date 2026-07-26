@@ -36,8 +36,12 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    bool isEditingTask = false;
+    QString editingTaskOriginalName;
+
     // Loads all saved tasks into the table.
     void loadTasks();
+
 
     // Adds one task to the table displayed on the Home page.
     void addTaskToTable(
