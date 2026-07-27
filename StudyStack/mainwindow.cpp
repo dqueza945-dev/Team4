@@ -162,12 +162,12 @@ void MainWindow::addTask()
         return;
     }
 
-    if (gradeWeight <= 0)
+    if (gradeWeight < 0)
     {
         QMessageBox::warning(
             this,
             "Invalid Grade Weight",
-            "Grade weight must be greater than 0."
+            "Grade weight must be greater than 0 if this is a school assignment."
             );
 
         ui->GradeWeightSpinBox->setFocus();
