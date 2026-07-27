@@ -23,7 +23,12 @@ MainWindow::MainWindow(QWidget *parent)
     // Make the table columns use the available width.
     ui->HomeTaskTableWidget
         ->horizontalHeader()
-        ->setSectionResizeMode(QHeaderView::Stretch);
+        ->setSectionResizeMode(QHeaderView::Interactive);
+
+    ui->HomeTaskTableWidget->setColumnWidth(0, 150);  // Task Name
+    ui->HomeTaskTableWidget->setColumnWidth(1, 100);  // Class
+    ui->HomeTaskTableWidget->setColumnWidth(2, 280);  // Due Date (extra room for countdown)
+    ui->HomeTaskTableWidget->setColumnWidth(3, 100);  // Hours
 
     // Make users select an entire task row.
     ui->HomeTaskTableWidget->setSelectionBehavior(
@@ -417,13 +422,38 @@ void MainWindow::addTaskToTable(
         new QTableWidgetItem(className)
         );
 
+    // calculate how much time is left until due date
+    qint64 secondsRemaining = QDateTime::currentDateTime().secsTo(displayedDueDate);
+
+    QString countdownText;
+
+    if (secondsRemaining < 0) {
+        countdownText = " (overdue)";
+    } else {
+        qint64 daysRemaining = secondsRemaining / 86400;
+        qint64 hoursRemaining = (secondsRemaining % 86400) / 3600;
+
+        if (daysRemaining > 0) {
+            countdownText = QString(" (%1d %2h left)")
+            .arg(daysRemaining)
+                .arg(hoursRemaining);
+        } else {
+            qint64 minutesRemaining = (secondsRemaining % 3600) / 60;
+            countdownText = QString(" (%1h %2m left)")
+                                .arg(hoursRemaining)
+                                .arg(minutesRemaining);
+        }
+    }
+
+
+
     ui->HomeTaskTableWidget->setItem(
         row,
         2,
         new QTableWidgetItem(
             displayedDueDate.toString(
                 "MM/dd/yyyy hh:mm AP"
-                )
+                ) + countdownText
             )
         );
 
