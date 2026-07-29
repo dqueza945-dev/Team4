@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Start the application on the Home page.
-    ui->stackedWidget->setCurrentWidget(ui->HomePage);
+    ui->stackedWidget->setCurrentWidget(ui->LoginPage);
 
     // Make the table columns use the available width.
     ui->HomeTaskTableWidget
@@ -84,9 +84,47 @@ MainWindow::MainWindow(QWidget *parent)
         this,
         &MainWindow::editTask
         );
+    // Attempt login when Login button is clicked.
+    connect(
+        ui->LoginButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::login
+        );
+
+    // Create account when Create Account button is clicked.
+    connect(
+        ui->CreateAccountButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::signUp
+        );
+
+    // Switch to Sign Up page.
+    connect(
+        ui->GoToSignUpButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::showSignUpPage
+        );
+
+    // Switch back to Login page.
+    connect(
+        ui->BackToLoginButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::showLoginPage
+        );
+    // Log out when Logout button is clicked.
+    connect(
+        ui->LogoutButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::logout
+        );
 
     // database is already open in main.cpp
-    loadTasks();
+    // loadTasks(); will be called after successful login, not here
 }
 
 MainWindow::~MainWindow()
@@ -213,7 +251,7 @@ void MainWindow::addTask()
             "(:user_id, :name, :class_name, :due_date, "
             ":grade_weight, :estimated_hours)"
             );
-        query.bindValue(":user_id", 1);  // TODO: replace with real logged-in user once login exists
+        query.bindValue(":user_id", currentUserId);
     }
 
     query.bindValue(":name", taskName);
@@ -347,12 +385,16 @@ void MainWindow::loadTasks()
 
     QSqlQuery query;
 
-    if (!query.exec(
-            "SELECT name, class_name, due_date, "
-            "grade_weight, estimated_hours "
-            "FROM tasks "
-            "ORDER BY due_date ASC"
-            ))
+    query.prepare(
+        "SELECT name, class_name, due_date, "
+        "grade_weight, estimated_hours "
+        "FROM tasks "
+        "WHERE user_id = :user_id "
+        "ORDER BY due_date ASC"
+        );
+    query.bindValue(":user_id", currentUserId);
+
+    if (!query.exec())
     {
         QMessageBox::critical(
             this,
@@ -468,4 +510,101 @@ void MainWindow::addTaskToTable(
                 ) + " hours"
             )
         );
+}
+void MainWindow::showLoginPage()
+{
+    ui->stackedWidget->setCurrentWidget(ui->LoginPage);
+}
+
+void MainWindow::logout()
+{
+    currentUserId = -1;
+    ui->HomeTaskTableWidget->setRowCount(0);
+    showLoginPage();
+}
+
+void MainWindow::showSignUpPage()
+{
+    ui->stackedWidget->setCurrentWidget(ui->SignUpPage);
+}
+
+void MainWindow::login()
+{
+    QString username = ui->LoginUsernameLineEdit->text().trimmed();
+    QString password = ui->LoginPasswordLineEdit->text();
+
+    if (username.isEmpty() || password.isEmpty())
+    {
+        QMessageBox::warning(
+            this,
+            "Missing Info",
+            "Please enter both a username and password."
+            );
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT id FROM users WHERE username = :username AND password_hash = :password");
+    query.bindValue(":username", username);
+    query.bindValue(":password", password);
+
+    if (!query.exec() || !query.next())
+    {
+        QMessageBox::warning(
+            this,
+            "Login Failed",
+            "Incorrect username or password."
+            );
+        return;
+    }
+
+    currentUserId = query.value(0).toInt();
+
+    // Clear the login fields for next time.
+    ui->LoginUsernameLineEdit->clear();
+    ui->LoginPasswordLineEdit->clear();
+
+    showHomePage();
+}
+
+void MainWindow::signUp()
+{
+    QString username = ui->SignUpUsernameLineEdit->text().trimmed();
+    QString password = ui->SignUpPasswordLineEdit->text();
+
+    if (username.isEmpty() || password.isEmpty())
+    {
+        QMessageBox::warning(
+            this,
+            "Missing Info",
+            "Please enter both a username and password."
+            );
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO users (username, password_hash) VALUES (:username, :password)");
+    query.bindValue(":username", username);
+    query.bindValue(":password", password);
+
+    if (!query.exec())
+    {
+        QMessageBox::critical(
+            this,
+            "Sign Up Error",
+            "Could not create account. Username may already be taken.\n\n" + query.lastError().text()
+            );
+        return;
+    }
+
+    QMessageBox::information(
+        this,
+        "Account Created",
+        "Account created! Please log in."
+        );
+
+    ui->SignUpUsernameLineEdit->clear();
+    ui->SignUpPasswordLineEdit->clear();
+
+    showLoginPage();
 }
