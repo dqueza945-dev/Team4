@@ -20,6 +20,18 @@ public:
     ~MainWindow() override;
 
 private slots:
+    // Atempt to login the user
+    void login();
+
+    // create a new account
+    void signUp();
+
+    // switches to login page
+    void showLoginPage();
+
+    // switches to sign up page
+    void showSignUpPage();
+
     // Saves a new task to the database.
     void addTask();
 
@@ -32,10 +44,13 @@ private slots:
     void deleteTask();
     // edits selected task
     void editTask();
+    // Logs the current user out and returns to Login page.
+    void logout();
 
 private:
     Ui::MainWindow *ui;
 
+     int currentUserId = -1;  // -1 means no one is logged in yet
     bool isEditingTask = false;
     QString editingTaskOriginalName;
 

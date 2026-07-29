@@ -32,6 +32,26 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
+          <widget class="QLabel" name="WelcomeLabel">
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Welcome to StudyStack</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="LogoutButton">
+           <property name="text">
+            <string>Logout</string>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignmentFlag::AlignHCenter">
           <widget class="QLabel" name="HomeTitleLabel">
            <property name="font">
             <font>
@@ -44,19 +64,6 @@
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="WelcomeLabel">
-           <property name="font">
-            <font>
-             <family>Times New Roman</family>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Welcome to StudyStack</string>
            </property>
           </widget>
          </item>
@@ -157,6 +164,156 @@
         </layout>
        </widget>
       </widget>
+      <widget class="QWidget" name="LoginPage">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item alignment="Qt::AlignmentFlag::AlignHCenter">
+           <widget class="QLabel" name="LoginTitle">
+            <property name="font">
+             <font>
+              <pointsize>22</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
+              <underline>false</underline>
+              <strikeout>false</strikeout>
+              <kerning>true</kerning>
+             </font>
+            </property>
+            <property name="text">
+             <string>Login to StudyStack</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="LoginUsernameLabel">
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Username:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="LoginUsernameLineEdit"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="LoginPasswordLabel">
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="text">
+             <string>Password:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="LoginPasswordLineEdit">
+            <property name="echoMode">
+             <enum>QLineEdit::EchoMode::Password</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="LoginButton">
+          <property name="text">
+           <string>Login</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="GoToSignUpButton">
+          <property name="text">
+           <string>Sign Up </string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="SignUpPage">
+       <widget class="QWidget" name="verticalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>-30</y>
+          <width>551</width>
+          <height>441</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item alignment="Qt::AlignmentFlag::AlignHCenter">
+          <widget class="QLabel" name="SignUpLabel">
+           <property name="font">
+            <font>
+             <pointsize>22</pointsize>
+             <italic>true</italic>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Sign Up for StudyStack!</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="SignUpUsernameLabel_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Username:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="SignUpUsernameLineEdit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="SignUpUsernameLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Password:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="SignUpPasswordLineEdit"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="CreateAccountButton">
+           <property name="text">
+            <string>Create Account</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="BackToLoginButton">
+           <property name="text">
+            <string>Back to Login</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
       <widget class="QWidget" name="AddTaskPage">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -193,13 +350,6 @@
              <widget class="QLabel" name="label_2">
               <property name="text">
                <string>Class:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="ClassComboBox">
-              <property name="editable">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -254,6 +404,13 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="ClassComboBox">
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -291,6 +448,12 @@
      <height>33</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuLogin">
+    <property name="title">
+     <string>Login</string>
+    </property>
+   </widget>
+   <addaction name="menuLogin"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
