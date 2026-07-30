@@ -212,7 +212,7 @@ void MainWindow::addTask()
         return;
     }
 
-    if (estimatedHours <= 0)
+    if (estimatedHours < 0)
     {
         QMessageBox::warning(
             this,
@@ -488,16 +488,22 @@ void MainWindow::addTaskToTable(
     }
 
 
+    // Check if there's less time remaining than the task needs.
+    double hoursRemaining_total = secondsRemaining / 3600.0;
+    bool isAtRisk = (secondsRemaining < 0) || (hoursRemaining_total < estimatedHours);
 
-    ui->HomeTaskTableWidget->setItem(
-        row,
-        2,
-        new QTableWidgetItem(
-            displayedDueDate.toString(
-                "MM/dd/yyyy hh:mm AP"
-                ) + countdownText
-            )
+    QTableWidgetItem *dueDateItem = new QTableWidgetItem(
+        displayedDueDate.toString("MM/dd/yyyy hh:mm AP") + countdownText
         );
+
+    if (isAtRisk)
+    {
+        dueDateItem->setBackground(Qt::red);
+        dueDateItem->setForeground(Qt::white);
+    }
+
+    ui->HomeTaskTableWidget->setItem(row, 2, dueDateItem);
+
 
     ui->HomeTaskTableWidget->setItem(
         row,
