@@ -135,6 +135,7 @@ MainWindow::~MainWindow()
 void MainWindow::showHomePage()
 {
     loadTasks();
+    updateSummaryStats();
     ui->stackedWidget->setCurrentWidget(ui->HomePage);
 }
 
@@ -432,6 +433,50 @@ void MainWindow::loadTasks()
             );
     }
 }
+
+void MainWindow::updateSummaryStats() {
+    // get every task's due date and hours for this user
+    QSqlQuery query;
+    query.prepare(
+        "SELECT due_date, estimated_hours FROM tasks WHERE user_id = :user_id"
+        );
+    query.bindValue(":user_id", currentUserId);
+    query.exec();
+
+    int dueTodayCount = 0;
+    double hoursPlannedToday = 0.0;
+    int overdueCount = 0;
+
+    QDate today = QDate::currentDate();
+
+     // go through every task and sort it into today or overdue or neither
+    while (query.next())
+    {
+        QString dueDateString = query.value(0).toString();
+        double estimatedHours = query.value(1).toDouble();
+
+        QDateTime dueDateTime = QDateTime::fromString(dueDateString, Qt::ISODate);
+        QDate dueDate = dueDateTime.date();
+
+        if (dueDate == today)
+        {
+            // task is due today. next count it and add its hours
+            dueTodayCount++;
+            hoursPlannedToday += estimatedHours;
+        }
+        else if (dueDateTime < QDateTime::currentDateTime())
+        {
+            // task's due date already passed
+            overdueCount++;
+        }
+    }
+
+    // update the three labels with the real numbers
+    ui->TasksDueTodayLabel->setText(QString("Tasks Due Today: %1").arg(dueTodayCount));
+    ui->HoursPlannedLabel->setText(QString("Hours Planned: %1").arg(hoursPlannedToday, 0, 'f', 1));
+    ui->OverDueTasksLabel->setText(QString("OverDue Tasks: %1").arg(overdueCount));
+}
+
 
 void MainWindow::addTaskToTable(
     const QString &name,
