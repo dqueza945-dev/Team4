@@ -69,6 +69,8 @@ install(TARGETS StudyStack
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+add_subdirectory(tests)
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(StudyStack)
 endif()

@@ -50,3 +50,82 @@ bool Database::init() {
 
 
 }
+
+int Database::checkLogin(const QString &username, const QString &password)
+{
+    QSqlQuery query;
+    query.prepare("SELECT id FROM users WHERE username = :username AND password_hash = :password");
+    query.bindValue(":username", username);
+    query.bindValue(":password", password);
+
+    // if the query fails or finds no match, the login is wrong
+    if (!query.exec() || !query.next())
+    {
+        return -1;
+    }
+
+    // login is correct, return the users id
+    return query.value(0).toInt();
+}
+
+bool Database::createAccount(const QString &username, const QString &password)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO users (username, password_hash) VALUES (:username, :password)");
+    query.bindValue(":username", username);
+    query.bindValue(":password", password);
+
+    return query.exec();  // true if it worked, false if it failed
+}
+
+// Adds a task tied to a specific user. Returns true if the insert worked.
+bool Database::addTaskForUser(int userId, const QString &name, const QString &className,
+                              const QString &dueDate, double gradeWeight, double estimatedHours)
+{
+    QSqlQuery query;
+    query.prepare(
+        "INSERT INTO tasks (user_id, name, class_name, due_date, grade_weight, estimated_hours) "
+        "VALUES (:user_id, :name, :class_name, :due_date, :grade_weight, :estimated_hours)"
+        );
+    query.bindValue(":user_id", userId);
+    query.bindValue(":name", name);
+    query.bindValue(":class_name", className);
+    query.bindValue(":due_date", dueDate);
+    query.bindValue(":grade_weight", gradeWeight);
+    query.bindValue(":estimated_hours", estimatedHours);
+
+    return query.exec();
+}
+
+// Counts how many tasks have this exact name. used to check if a task exists or not
+int Database::countTasksByName(const QString &name)
+{
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM tasks WHERE name = :name");
+    query.bindValue(":name", name);
+    query.exec();
+    query.next();  // move to the first result row
+
+    return query.value(0).toInt();  // the count
+}
+
+// Deletes a task by its name. Returns true if the delete ran successfully
+bool Database::deleteTaskByName(const QString &name)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM tasks WHERE name = :name");
+    query.bindValue(":name", name);
+
+    return query.exec();
+}
+
+// Renames a task. This is used to confirm that editing a task actually updates the database.
+bool Database::updateTaskName(const QString &oldName, const QString &newName)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE tasks SET name = :newName WHERE name = :oldName");
+    query.bindValue(":newName", newName);
+    query.bindValue(":oldName", oldName);
+
+    return query.exec();
+}
