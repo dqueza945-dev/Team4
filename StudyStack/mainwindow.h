@@ -20,6 +20,9 @@ public:
     ~MainWindow() override;
 
 private slots:
+    // Calculates and displays Today's Summary stats: due today, hours planned, overdue
+    void updateSummaryStats();
+
     // Atempt to login the user
     void login();
 
