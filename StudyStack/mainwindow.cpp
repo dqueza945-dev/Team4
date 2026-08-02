@@ -154,7 +154,7 @@ void MainWindow::addTask()
         ui->TaskNameLineEdit->text().trimmed();
 
     QString className =
-        ui->ClassComboBox->currentText().trimmed();
+        ui->ClassLineEdit->text().trimmed();
 
     QDateTime dueDateTime =
         ui->dateTimeEdit->dateTime();
@@ -185,7 +185,7 @@ void MainWindow::addTask()
             "Please select or enter a class."
             );
 
-        ui->ClassComboBox->setFocus();
+        ui->ClassLineEdit->setFocus();
         return;
     }
 
@@ -297,7 +297,7 @@ void MainWindow::addTask()
 
     // Clear the form after saving.
     ui->TaskNameLineEdit->clear();
-    ui->ClassComboBox->setCurrentIndex(-1);
+    ui->ClassLineEdit->clear();
     ui->GradeWeightSpinBox->setValue(0);
     ui->EstimatedHoursSpinBox->setValue(0);
 
@@ -370,7 +370,7 @@ void MainWindow::editTask()
     ui->TaskNameLineEdit->setText(
         ui->HomeTaskTableWidget->item(row, 0)->text()
         );
-    ui->ClassComboBox->setCurrentText(
+    ui->ClassLineEdit->setText(
         ui->HomeTaskTableWidget->item(row, 1)->text()
         );
 
