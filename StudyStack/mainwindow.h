@@ -20,6 +20,9 @@ public:
     ~MainWindow() override;
 
 private slots:
+    // Shows the highestpriority task to start using the priority algorithm
+    void updateSuggestedStart();
+
     // Calculates and displays Today's Summary stats: due today, hours planned, overdue
     void updateSummaryStats();
 

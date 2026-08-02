@@ -10,6 +10,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QTableWidgetItem>
+#include "database.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -136,6 +137,7 @@ void MainWindow::showHomePage()
 {
     loadTasks();
     updateSummaryStats();
+    updateSuggestedStart();
     ui->stackedWidget->setCurrentWidget(ui->HomePage);
 }
 
@@ -431,6 +433,23 @@ void MainWindow::loadTasks()
             gradeWeight,
             estimatedHours
             );
+    }
+}
+
+void MainWindow::updateSuggestedStart()
+{
+    Database db;
+    db.init();
+
+    QString suggestedTask = db.getSuggestedStartTask(currentUserId);
+
+    if (suggestedTask.isEmpty())
+    {
+        ui->OverDueTasksLabel->setText("Suggested Start: None");
+    }
+    else
+    {
+        ui->OverDueTasksLabel->setText("Suggested Start: " + suggestedTask);
     }
 }
 
