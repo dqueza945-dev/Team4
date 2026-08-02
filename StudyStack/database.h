@@ -6,6 +6,9 @@
 class Database
 {
 public:
+    // Returns the name of the highest priority task the user should start now
+    QString getSuggestedStartTask(int userId);
+
     // Updates an existing task's name. This is to test if edits change the data
     bool updateTaskName(const QString &oldName, const QString &newName);
 

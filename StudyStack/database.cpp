@@ -4,6 +4,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QDebug>
+#include <QDateTime>
 
 Database::Database() {}
 
@@ -128,4 +129,51 @@ bool Database::updateTaskName(const QString &oldName, const QString &newName)
     query.bindValue(":oldName", oldName);
 
     return query.exec();
+}
+
+// Looks through all of a user's tasks and finds the one with the highest priority
+QString Database::getSuggestedStartTask(int userId)
+{
+    QSqlQuery query;
+    query.prepare(
+        "SELECT name, due_date, estimated_hours, grade_weight FROM tasks WHERE user_id = :user_id"
+        );
+    query.bindValue(":user_id", userId);
+    query.exec();
+
+    QString bestTaskName = "";
+    double bestPriorityScore = -1.0;
+
+    while (query.next())
+    {
+        QString name = query.value(0).toString();
+        QString dueDateString = query.value(1).toString();
+        double estimatedHours = query.value(2).toDouble();
+        double gradeWeight = query.value(3).toDouble();
+
+        QDateTime dueDateTime = QDateTime::fromString(dueDateString, Qt::ISODate);
+        qint64 secondsRemaining = QDateTime::currentDateTime().secsTo(dueDateTime);
+
+        // skip tasks that are already overdue or have no time left
+        if (secondsRemaining <= 0)
+        {
+            continue;
+        }
+
+        double hoursRemaining = secondsRemaining / 3600.0;
+
+        // urgency: how tight is the timeline
+        double urgency = estimatedHours / hoursRemaining;
+
+        // priority score: urgency boosted by how much the grade weight matters
+        double priorityScore = urgency * (1.0 + gradeWeight / 100.0);
+
+        if (priorityScore > bestPriorityScore)
+        {
+            bestPriorityScore = priorityScore;
+            bestTaskName = name;
+        }
+    }
+
+    return bestTaskName;
 }
