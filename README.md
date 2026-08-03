@@ -40,6 +40,6 @@ A smart academic planner. You enter your classes and assignments, and it builds 
 3. Select Build and click Build All
 4. Select Tools > Tests > Run All Tests
 
-# Unit Test Report
+## Unit Test Report
 
 The test output pops up in Qt creator's Test Results section. A successful test run will complete 25 tests. The tests cover task operations, data vaildation, and database operations.
