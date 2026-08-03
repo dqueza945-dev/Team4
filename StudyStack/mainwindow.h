@@ -20,6 +20,9 @@ public:
     ~MainWindow() override;
 
 private slots:
+    // Shows a popup listing all tasks sorted by priority
+    void viewTasksSortedByPriority();
+
     // Shows the highestpriority task to start using the priority algorithm
     void updateSuggestedStart();
 

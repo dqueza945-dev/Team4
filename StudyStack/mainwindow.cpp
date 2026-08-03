@@ -124,6 +124,14 @@ MainWindow::MainWindow(QWidget *parent)
         &MainWindow::logout
         );
 
+    // Show the priority task list when View Tasks is clicked
+    connect(
+        ui->ViewTaskButton,
+        &QPushButton::clicked,
+        this,
+        &MainWindow::viewTasksSortedByPriority
+        );
+
     // database is already open in main.cpp
     // loadTasks(); will be called after successful login, not here
 }
@@ -677,4 +685,27 @@ void MainWindow::signUp()
     ui->SignUpPasswordLineEdit->clear();
 
     showLoginPage();
+}
+
+void MainWindow::viewTasksSortedByPriority()
+{
+    Database db;
+    db.init();
+
+    QStringList tasks = db.getTasksSortedByPriority(currentUserId);
+
+    if (tasks.isEmpty())
+    {
+        QMessageBox::information(this, "View Tasks", "You have no tasks yet.");
+        return;
+    }
+
+    // build a simple numbered list, most urgent first
+    QString message = "Tasks by priority (most urgent first):\n\n";
+    for (int i = 0; i < tasks.size(); i++)
+    {
+        message += QString::number(i + 1) + ". " + tasks[i] + "\n";
+    }
+
+    QMessageBox::information(this, "View Tasks", message);
 }

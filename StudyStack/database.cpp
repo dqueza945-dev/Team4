@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QDateTime>
+#include <algorithm>
 
 Database::Database() {}
 
@@ -176,4 +177,62 @@ QString Database::getSuggestedStartTask(int userId)
     }
 
     return bestTaskName;
+}
+
+// Returns every task, sorted from most urgent to least urgent using the priority formula
+QStringList Database::getTasksSortedByPriority(int userId)
+{
+    QSqlQuery query;
+    query.prepare(
+        "SELECT name, due_date, estimated_hours, grade_weight FROM tasks WHERE user_id = :user_id"
+        );
+    query.bindValue(":user_id", userId);
+    query.exec();
+
+    // store each task alongside its priority score
+    QList<QPair<double, QString>> scoredTasks;
+
+    while (query.next())
+    {
+        QString name = query.value(0).toString();
+        QString dueDateString = query.value(1).toString();
+        double estimatedHours = query.value(2).toDouble();
+        double gradeWeight = query.value(3).toDouble();
+
+        QDateTime dueDateTime = QDateTime::fromString(dueDateString, Qt::ISODate);
+        qint64 secondsRemaining = QDateTime::currentDateTime().secsTo(dueDateTime);
+
+        double priorityScore;
+        QString displayDate = dueDateTime.toString("MM/dd/yyyy hh:mm AP");
+
+        if (secondsRemaining <= 0)
+        {
+            // overdue tasks always show at the very top
+            priorityScore = 999999.0;
+            displayDate += " (overdue)";
+        }
+        else
+        {
+            double hoursRemaining = secondsRemaining / 3600.0;
+            double urgency = estimatedHours / hoursRemaining;
+            priorityScore = urgency * (1.0 + gradeWeight / 100.0);
+        }
+
+        QString displayLine = name + " — " + displayDate;
+        scoredTasks.append(qMakePair(priorityScore, displayLine));
+    }
+
+    // sort so highest priority score to come first
+    std::sort(scoredTasks.begin(), scoredTasks.end(),
+              [](const QPair<double, QString> &a, const QPair<double, QString> &b) {
+                  return a.first > b.first;
+              });
+
+    QStringList result;
+    for (const auto &pair : scoredTasks)
+    {
+        result.append(pair.second);
+    }
+
+    return result;
 }
