@@ -8,7 +8,7 @@
 - Nathan Rodriguez
 
 ## Description:
-A smart academic planner. You enter your classes and assignments, and it builds your schedule and tells you when to start each task. 
+A smart academic planner. You enter your classes and assignments, and tells you when to start each task.
 
 ## Tech Stack
 - C++17
@@ -33,13 +33,16 @@ A smart academic planner. You enter your classes and assignments, and it builds 
 2. Clone this repo: git clone https://github.com/dqueza945-dev/Team4.git
 3. Open Qt Creator. File. Open Project. select Team4/StudyStack/CMakeLists.txt
 4. Click the green Run button.
+5. Sign up for an account and then log in to start adding tasks
+
 
 ## How to run Unit Tests
-1. Open Team4/StudyStack/CMakeLists.txt in Qt Creator
-2. Configure the project with CMake anf Qt Creator
-3. Select Build and click Build All
-4. Select Tools > Tests > Run All Tests
+1. In Qt Creator use the dropdown near the Run button. 
+2. Available test targets: StudyStackTests, TestLogin, TestSignUp, TestTasks, TestEdit, TestWarning, TestValidation
+3. Select a test target then click the green Run button
+4. Repeat for each target to run all tests
+
 
 ## Unit Test Report
 
-The test output pops up in Qt creator's Test Results section. A successful test run will complete 25 tests. The tests cover task operations, data vaildation, and database operations.
+The test output pops up in Qt creator's Test Results section. The tests cover task operations, data vaildation, and database operations.
