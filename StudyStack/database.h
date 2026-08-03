@@ -2,10 +2,14 @@
 #define DATABASE_H
 
 #include <QSqlDatabase>
+#include <QStringList>
 
 class Database
 {
 public:
+    // Returns all of a user's tasks sorted by priority. with most urgent first
+    QStringList getTasksSortedByPriority(int userId);
+
     // Returns the name of the highest priority task the user should start now
     QString getSuggestedStartTask(int userId);
 
